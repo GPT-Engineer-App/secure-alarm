@@ -3,15 +3,16 @@ import { Button, Text, useToast, VStack, Heading, Container } from "@chakra-ui/r
 import { FaShieldAlt } from "react-icons/fa";
 
 const Index = () => {
-  const [isArmed, setIsArmed] = useState(false);
+  const [systemStatus, setSystemStatus] = useState("unarmed");
   const toast = useToast();
 
   const handleToggleAlarm = () => {
-    setIsArmed(!isArmed);
+    const nextStatus = systemStatus === "unarmed" ? "armedAway" : systemStatus === "armedAway" ? "armedHome" : "unarmed";
+    setSystemStatus(nextStatus);
     toast({
-      title: isArmed ? "Security System Disarmed" : "Security System Armed",
-      description: isArmed ? "The security system is now off." : "The security system is now active.",
-      status: isArmed ? "warning" : "success",
+      title: `Security System ${nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}`,
+      description: `The security system is now ${nextStatus.replace("armed", "armed - ")}.`,
+      status: nextStatus === "unarmed" ? "warning" : "success",
       duration: 3000,
       isClosable: true,
     });
@@ -21,9 +22,9 @@ const Index = () => {
     <Container centerContent>
       <VStack spacing={4} mt={10}>
         <Heading>Home Security System</Heading>
-        <Text>{isArmed ? "System is currently ARMED." : "System is currently DISARMED."}</Text>
-        <Button leftIcon={<FaShieldAlt />} colorScheme={isArmed ? "red" : "green"} onClick={handleToggleAlarm}>
-          {isArmed ? "Disarm System" : "Arm System"}
+        <Text>{systemStatus === "unarmed" ? "System is currently UNARMED." : `System is currently ARMED - ${systemStatus.replace("armed", "").trim().toUpperCase()}.`}</Text>
+        <Button leftIcon={<FaShieldAlt />} colorScheme={systemStatus === "unarmed" ? "green" : "red"} onClick={handleToggleAlarm}>
+          {systemStatus === "unarmed" ? "Arm Away" : systemStatus === "armedAway" ? "Arm Home" : "Disarm"}
         </Button>
       </VStack>
     </Container>
