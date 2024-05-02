@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Text, useToast, VStack, Heading, Container } from "@chakra-ui/react";
+import { Button, Text, useToast, VStack, Heading, Container, RadioGroup, Stack, Radio } from "@chakra-ui/react";
 import { FaShieldAlt } from "react-icons/fa";
 
 const Index = () => {
@@ -23,9 +23,13 @@ const Index = () => {
       <VStack spacing={4} mt={10}>
         <Heading>Home Security System</Heading>
         <Text>{systemStatus === "unarmed" ? "System is currently UNARMED." : `System is currently ARMED - ${systemStatus.replace("armed", "").trim().toUpperCase()}.`}</Text>
-        <Button leftIcon={<FaShieldAlt />} colorScheme={systemStatus === "unarmed" ? "green" : "red"} onClick={handleToggleAlarm}>
-          {systemStatus === "unarmed" ? "Arm Away" : systemStatus === "armedAway" ? "Arm Home" : "Disarm"}
-        </Button>
+        <RadioGroup onChange={setSystemStatus} value={systemStatus}>
+          <Stack direction="row">
+            <Radio value="unarmed">Unarmed</Radio>
+            <Radio value="armedAway">Armed Away</Radio>
+            <Radio value="armedHome">Armed Home</Radio>
+          </Stack>
+        </RadioGroup>
       </VStack>
     </Container>
   );
