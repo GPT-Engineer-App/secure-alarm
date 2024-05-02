@@ -6,7 +6,7 @@ const Index = () => {
   const [systemStatus, setSystemStatus] = useState("unarmed");
   const toast = useToast();
 
-  const handleToggleAlarm = () => {
+  const handleToggleAlarm = async () => {
     const nextStatus = systemStatus === "unarmed" ? "armedAway" : systemStatus === "armedAway" ? "armedHome" : "unarmed";
     setSystemStatus(nextStatus);
     toast({
@@ -16,6 +16,7 @@ const Index = () => {
       duration: 3000,
       isClosable: true,
     });
+    await fetch(`http://localhost:8080/alarm/set-state/${nextStatus}`, { method: "POST" });
   };
 
   return (
