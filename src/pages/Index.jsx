@@ -1,48 +1,17 @@
 import React, { useState } from "react";
-import { Box, Button, Input, Text, useToast, VStack, Heading, Container } from "@chakra-ui/react";
-import { FaBell } from "react-icons/fa";
+import { Button, Text, useToast, VStack, Heading, Container } from "@chakra-ui/react";
+import { FaShieldAlt } from "react-icons/fa";
 
 const Index = () => {
-  const [time, setTime] = useState("");
-  const [timer, setTimer] = useState(null);
+  const [isArmed, setIsArmed] = useState(false);
   const toast = useToast();
 
-  const handleSetAlarm = () => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-
-    const alarmTime = new Date(time);
-    const now = new Date();
-    const timeToAlarm = alarmTime.getTime() - now.getTime();
-
-    if (timeToAlarm < 0) {
-      toast({
-        title: "Invalid Time",
-        description: "Please set a time in the future.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    const timeoutId = setTimeout(() => {
-      toast({
-        title: "Alarm",
-        description: "Your alarm is ringing!",
-        status: "info",
-        duration: 5000,
-        isClosable: true,
-      });
-    }, timeToAlarm);
-
-    setTimer(timeoutId);
-
+  const handleToggleAlarm = () => {
+    setIsArmed(!isArmed);
     toast({
-      title: "Alarm Set",
-      description: `Your alarm is set for ${alarmTime.toLocaleTimeString()}.`,
-      status: "success",
+      title: isArmed ? "Security System Disarmed" : "Security System Armed",
+      description: isArmed ? "The security system is now off." : "The security system is now active.",
+      status: isArmed ? "warning" : "success",
       duration: 3000,
       isClosable: true,
     });
@@ -51,11 +20,10 @@ const Index = () => {
   return (
     <Container centerContent>
       <VStack spacing={4} mt={10}>
-        <Heading>Alarm System</Heading>
-        <Text>Set your alarm:</Text>
-        <Input placeholder="Select time" size="md" type="datetime-local" value={time} onChange={(e) => setTime(e.target.value)} />
-        <Button leftIcon={<FaBell />} colorScheme="blue" onClick={handleSetAlarm}>
-          Set Alarm
+        <Heading>Home Security System</Heading>
+        <Text>{isArmed ? "System is currently ARMED." : "System is currently DISARMED."}</Text>
+        <Button leftIcon={<FaShieldAlt />} colorScheme={isArmed ? "red" : "green"} onClick={handleToggleAlarm}>
+          {isArmed ? "Disarm System" : "Arm System"}
         </Button>
       </VStack>
     </Container>
